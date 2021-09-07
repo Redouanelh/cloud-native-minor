@@ -13,4 +13,10 @@ public class WordService {
 
         return word.reverseWord();
     }
+
+    public int countAmountOfWords(String text) {
+        Word word = new Word(text);
+
+        return word.countWords();
+    }
 }

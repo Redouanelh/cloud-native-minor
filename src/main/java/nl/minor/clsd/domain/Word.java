@@ -18,4 +18,8 @@ public class Word {
 
         return this;
     }
+
+    public int countWords() {
+        return this.word.split("\\s+").length;
+    }
 }
