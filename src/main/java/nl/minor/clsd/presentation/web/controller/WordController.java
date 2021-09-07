@@ -1,6 +1,7 @@
 package nl.minor.clsd.presentation.web.controller;
 
-import nl.minor.clsd.application.WordService;
+import nl.minor.clsd.application.IWordService;
+import nl.minor.clsd.application.WordServiceDev;
 import nl.minor.clsd.application.error.MoreThanOneWordException;
 import nl.minor.clsd.application.error.WordToShortException;
 import nl.minor.clsd.domain.Word;
@@ -19,9 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("word")
 public class WordController {
 
-    private final WordService wordService;
+    private final IWordService wordService;
 
-    public WordController(WordService wordService) {
+    public WordController(IWordService wordService) {
         this.wordService = wordService;
     }
 

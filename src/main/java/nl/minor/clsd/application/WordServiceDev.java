@@ -3,15 +3,17 @@ package nl.minor.clsd.application;
 import lombok.extern.slf4j.Slf4j;
 import nl.minor.clsd.data.WordRepository;
 import nl.minor.clsd.domain.Word;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-public class WordService {
+@Profile("dev")
+public class WordServiceDev implements IWordService {
 
     private WordRepository wordRepository;
 
-    public WordService(WordRepository wordRepository) {
+    public WordServiceDev(WordRepository wordRepository) {
         this.wordRepository = wordRepository;
     }
 
@@ -28,7 +30,7 @@ public class WordService {
 
             Word word = new Word(text);
             this.wordRepository.requestedTexts.put(text, word.countWords());
-            
+
             return word.countWords();
         }
     }
