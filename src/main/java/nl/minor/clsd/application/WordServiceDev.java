@@ -24,12 +24,12 @@ public class WordServiceDev implements IWordService {
     }
 
     public int countAmountOfWords(String text) {
-        if (this.wordRepository.requestedTexts.containsKey(text)) return this.wordRepository.requestedTexts.get(text);
+        if (this.wordRepository.localStorageDb.containsKey(text)) return this.wordRepository.localStorageDb.get(text);
         else {
             log.info("New text! Adding it to local storage...");
 
             Word word = new Word(text);
-            this.wordRepository.requestedTexts.put(text, word.countWords());
+            this.wordRepository.localStorageDb.put(text, word.countWords());
 
             return word.countWords();
         }

@@ -6,5 +6,5 @@ import java.util.HashMap;
 
 @Repository
 public class WordRepository {
-    public HashMap<String, Integer> requestedTexts = new HashMap<>();
+    public HashMap<String, Integer> localStorageDb = new HashMap<>();
 }
