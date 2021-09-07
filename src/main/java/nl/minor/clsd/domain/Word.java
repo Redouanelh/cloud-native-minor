@@ -13,7 +13,9 @@ public class Word {
 
     private String word;
 
-    public String reverseWord() {
-        return new StringBuilder(this.word).reverse().toString();
+    public Word reverseWord() {
+        this.word = new StringBuilder(this.word).reverse().toString();
+
+        return this;
     }
 }

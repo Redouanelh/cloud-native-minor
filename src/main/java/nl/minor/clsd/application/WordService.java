@@ -11,6 +11,6 @@ public class WordService {
     public Word reverseWord(String input) {
         Word word = new Word(input);
 
-        return new Word(word.reverseWord());
+        return word.reverseWord();
     }
 }
