@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 
 @Getter
@@ -13,6 +14,9 @@ import javax.persistence.Entity;
 @AllArgsConstructor
 @Entity
 public class AccountHolder extends BaseEntity {
+    @Column(name = "firstName")
     private String firstName;
+
+    @Column(name = "lastName")
     private String lastName;
 }

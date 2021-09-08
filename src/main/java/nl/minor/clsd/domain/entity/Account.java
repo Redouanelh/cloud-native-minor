@@ -6,10 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import nl.minor.clsd.domain.AccountStatus;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import javax.persistence.*;
 
 @Getter
 @Setter
@@ -17,9 +14,12 @@ import javax.persistence.Enumerated;
 @AllArgsConstructor
 @Entity
 public class Account extends BaseEntity {
+    @Column(name = "iban")
     private String iban;
 
+    @Column(name = "saldo")
     private double saldo;
 
+    @Enumerated(EnumType.STRING)
     private AccountStatus accountStatus;
 }
