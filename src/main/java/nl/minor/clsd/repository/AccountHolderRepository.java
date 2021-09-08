@@ -1,19 +1,7 @@
 package nl.minor.clsd.repository;
 
-import nl.minor.clsd.domain.entity.Account;
-import org.springframework.stereotype.Repository;
+import nl.minor.clsd.domain.entity.AccountHolder;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-@Repository
-public class AccountHolderRepository {
-    private Map<Integer, List<Account>> accountHoldersLocalStorage = new HashMap<>();
-
-    // create accountholder
-
-    // add account to accountholder
-
-    // get all accounts of accountholder
+public interface AccountHolderRepository extends JpaRepository<AccountHolder, Integer> {
 }
