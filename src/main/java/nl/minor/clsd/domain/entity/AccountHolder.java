@@ -1,16 +1,18 @@
-package nl.minor.clsd.domain;
+package nl.minor.clsd.domain.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.Entity;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AccountHolder {
-    private int id;
+@Entity
+public class AccountHolder extends BaseEntity {
     private String firstName;
     private String lastName;
 }

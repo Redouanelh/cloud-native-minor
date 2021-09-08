@@ -1,6 +1,6 @@
 package nl.minor.clsd.repository;
 
-import nl.minor.clsd.domain.AccountHolder;
+import nl.minor.clsd.domain.entity.AccountHolder;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
