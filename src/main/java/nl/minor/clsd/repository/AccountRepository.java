@@ -10,4 +10,16 @@ import java.util.Map;
 @Repository
 public class AccountRepository {
     private Map<Integer, List<AccountHolder>> accountsLocalStorage = new HashMap<>();
+
+    // create account
+
+    // block account
+
+    // delete account
+
+    // get all accounts
+
+    // get one account
+
+    // add accountholder
 }
