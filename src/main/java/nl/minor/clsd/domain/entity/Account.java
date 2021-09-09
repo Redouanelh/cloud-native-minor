@@ -7,6 +7,7 @@ import lombok.Setter;
 import nl.minor.clsd.domain.AccountStatus;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -22,4 +23,11 @@ public class Account extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private AccountStatus accountStatus;
+
+    @ManyToMany
+    @JoinTable(
+            name = "account_rule",
+            joinColumns = @JoinColumn(name = "account_id"),
+            inverseJoinColumns = @JoinColumn(name = "accountHolder_id"))
+    private Set<AccountHolder> accountHolders;
 }
