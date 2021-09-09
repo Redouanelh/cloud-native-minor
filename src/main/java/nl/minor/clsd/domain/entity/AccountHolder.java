@@ -24,4 +24,9 @@ public class AccountHolder extends BaseEntity {
 
     @ManyToMany(mappedBy = "accountHolders")
     private Set<Account> accounts;
+
+    public AccountHolder(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
 }
