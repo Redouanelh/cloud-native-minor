@@ -12,5 +12,5 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateAccountRequestDto implements Serializable {
-    private int accountHolderId;
+    private Integer accountHolderId;
 }
