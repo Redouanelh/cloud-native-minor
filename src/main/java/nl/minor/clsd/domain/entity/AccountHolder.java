@@ -7,8 +7,6 @@ import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -21,12 +19,4 @@ public class AccountHolder extends BaseEntity {
 
     @Column(name = "lastName")
     private String lastName;
-
-    @ManyToMany(mappedBy = "accountHolders")
-    private Set<Account> accounts;
-
-    public AccountHolder(String firstName, String lastName) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-    }
 }

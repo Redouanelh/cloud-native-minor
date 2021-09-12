@@ -10,6 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("accountholder")
 public class AccountHolderController {
@@ -28,6 +31,12 @@ public class AccountHolderController {
         if (accountHolderDto == null) throw new AccountHolderNotFoundException("Accountholder with this id was not found.");
 
         return ResponseEntity.status(HttpStatus.OK).body(accountHolderDto);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<AccountHolderDto>> getAll() {
+        List<AccountHolderDto> accountHolders = this.accountHolderService.findAll().stream().map(this.accountHolderMapper::entityToAccountHolderDto).collect(Collectors.toList());
+        return ResponseEntity.status(HttpStatus.OK).body(accountHolders);
     }
 
     @PostMapping
