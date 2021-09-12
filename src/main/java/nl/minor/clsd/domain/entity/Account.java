@@ -1,13 +1,15 @@
 package nl.minor.clsd.domain.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import nl.minor.clsd.domain.AccountStatus;
+import nl.minor.clsd.domain.IbanToStringConverter;
+import org.iban4j.Iban;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.Set;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -15,14 +17,15 @@ import java.util.Set;
 @AllArgsConstructor
 @Entity
 public class Account extends BaseEntity {
+    @Convert(converter = IbanToStringConverter.class)
     @Column(name = "iban")
-    private String iban;
+    private Iban iban;
 
     @Column(name = "saldo")
-    private double saldo;
+    private BigDecimal saldo;
 
     @Enumerated(EnumType.STRING)
-    private AccountStatus accountStatus;
+    private AccountStatus accountStatus = AccountStatus.ACTIVE;
 
     @ManyToMany
     @JoinTable(
@@ -30,4 +33,16 @@ public class Account extends BaseEntity {
             joinColumns = @JoinColumn(name = "account_id"),
             inverseJoinColumns = @JoinColumn(name = "accountHolder_id"))
     private Set<AccountHolder> accountHolders;
+
+    public Set<AccountHolder> getAccountHolders() {
+        return Collections.unmodifiableSet(accountHolders);
+    }
+
+    public boolean addAccountHolder(AccountHolder holder) {
+        return accountHolders.add(holder);
+    }
+
+    public boolean removeAccountHolder(UUID accountHolderId) {
+        return accountHolders.removeIf(holder -> holder.getId().equals(accountHolderId));
+    }
 }

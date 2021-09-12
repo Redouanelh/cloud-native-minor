@@ -1,12 +1,12 @@
 package nl.minor.clsd.presentation;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import nl.minor.clsd.domain.AccountStatus;
 import nl.minor.clsd.domain.entity.AccountHolder;
+import org.iban4j.Iban;
+import javax.validation.constraints.*;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 @Getter
@@ -14,8 +14,10 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AccountDto {
-    private String iban;
-    private double saldo;
-    private AccountStatus accountStatus;
+    private Iban iban;
+    @NotNull
+    @DecimalMin("1")
+    private BigDecimal saldo;
+    private AccountStatus accountStatus = AccountStatus.ACTIVE;
     private Set<AccountHolder> accountHolders;
 }

@@ -35,7 +35,7 @@ public class AccountController {
 
     // DELETE en doe met requestbody.ok 200 dus account/{id}
     @DeleteMapping("{id}")
-    public ResponseEntity deleteAccount(@PathVariable int id) {
+    public ResponseEntity<Boolean> deleteAccount(@PathVariable int id) {
         return null;
     }
 
