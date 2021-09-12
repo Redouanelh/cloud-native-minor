@@ -62,7 +62,18 @@ public class AccountService extends BaseService<Account> {
         }
     }
 
-    // Remove holder from account (ook check of ie er uberhuapt wel in zit)
+    @Transactional
+    public Account removeAccountHolder(String iban, int id) {
+        Optional<Account> account = this.accountRepository.findByIban(iban);
+        if (account.isEmpty()) throw new NotFoundException(String.format("Account with iban %s was not found.", iban));
+
+        AccountHolder accountHolder = this.accountHolderService.getById(id);
+        if (!account.get().getAccountHolders().contains(accountHolder)) throw new AlreadyExistsException(String.format("Account with iban %s does not contain an AccountHolder with id %s. No need to remove it.", iban, id));
+        else {
+            account.get().removeAccountHolder(accountHolder.getId());
+            return account.get();
+        }
+    }
 
     @Transactional
     public Account blockAccount(String iban) {

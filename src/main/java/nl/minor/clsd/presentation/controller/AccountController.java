@@ -61,14 +61,17 @@ public class AccountController {
         return ResponseEntity.status(HttpStatus.OK).body(accountDto);
     }
 
-    @PutMapping("{iban}/holder/{id}")
+    @PutMapping("{iban}/holder/add/{id}")
     public ResponseEntity<AccountDto> addAccountHolder(@PathVariable String iban, @PathVariable int id) {
         AccountDto accountDto = this.accountMapper.entityToAccountDto(this.accountService.addAccountHolder(iban, id));
         return ResponseEntity.status(HttpStatus.OK).body(accountDto);
     }
 
-    // Remove holder from account (ook check of ie er uberhuapt wel in zit)
-
+    @PutMapping("{iban}/holder/remove/{id}")
+    public ResponseEntity<AccountDto> removeAccountHolder(@PathVariable String iban, @PathVariable int id) {
+        AccountDto accountDto = this.accountMapper.entityToAccountDto(this.accountService.removeAccountHolder(iban, id));
+        return ResponseEntity.status(HttpStatus.OK).body(accountDto);
+    }
 
     @DeleteMapping("{iban}")
     public ResponseEntity<Integer> deleteAccount(@PathVariable String iban) {
