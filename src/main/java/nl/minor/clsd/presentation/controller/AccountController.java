@@ -25,11 +25,9 @@ public class AccountController {
         this.accountMapper = accountMapper;
     }
 
-    @GetMapping("{id}") //TODO: later iban van maken?
-    public ResponseEntity<AccountDto> getAccountHolder(@PathVariable int id) {
-        AccountDto accountDto = this.accountMapper.entityToAccountDto(this.accountService.findById(id));
-        if (accountDto == null) throw new NotFoundException("Accountholder with this id was not found.");
-
+    @GetMapping("{iban}")
+    public ResponseEntity<AccountDto> getAccount(@PathVariable String iban) {
+        AccountDto accountDto = this.accountMapper.entityToAccountDto(this.accountService.findByIban(iban));
         return ResponseEntity.status(HttpStatus.OK).body(accountDto);
     }
 
@@ -49,6 +47,11 @@ public class AccountController {
         return ResponseEntity.status(HttpStatus.CREATED).body(accountDto);
     }
 
+    @PutMapping("block/{iban}")
+    public ResponseEntity<AccountDto> blockAccount(@PathVariable String iban) {
+        AccountDto accountDto = this.accountMapper.entityToAccountDto(this.accountService.blockAccount(iban));
+        return ResponseEntity.status(HttpStatus.OK).body(accountDto);
+    }
     // als user aan account toevoeg check van tevoren of die user er al nie in zit
 
     // DELETE en doe met requestbody.ok 200 dus account/{id}
