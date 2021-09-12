@@ -15,6 +15,7 @@ import org.iban4j.bban.BbanStructureEntry;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.iban4j.bban.BbanEntryType.account_number;
@@ -36,6 +37,11 @@ public class AccountService extends BaseService<Account> {
         if (account.isEmpty()) throw new NotFoundException(String.format("Account with iban %s was not found.", iban));
 
         else return account.get();
+    }
+
+    public List<Account> findAllByHolder(int id) {
+        AccountHolder accountHolder = this.accountHolderService.getById(id);
+        return this.accountRepository.findAllByAccountHolders(accountHolder);
     }
 
     @Transactional

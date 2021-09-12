@@ -45,6 +45,12 @@ public class AccountController {
         return ResponseEntity.status(HttpStatus.OK).body(accounts);
     }
 
+    @GetMapping("holder/{id}")
+    public ResponseEntity<List<AccountDto>> getAllFromHolder(@PathVariable int id) {
+        List<AccountDto> accounts = this.accountService.findAllByHolder(id).stream().map(this.accountMapper::entityToAccountDto).collect(Collectors.toList());
+        return ResponseEntity.status(HttpStatus.OK).body(accounts);
+    }
+
     @PostMapping
     public ResponseEntity<AccountDto> createAccount(@RequestBody CreateAccountRequestDto request) {
         if (request.getCountryCode() == null) throw new MissingParameterException("Missing parameter countryCode.");

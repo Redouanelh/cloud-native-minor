@@ -37,8 +37,6 @@ public class AccountHolderController {
         return ResponseEntity.status(HttpStatus.OK).body(accountHolders);
     }
 
-    // TODO alle accounts kunnen ophalen van een accountholder
-
     @PostMapping
     public ResponseEntity<AccountHolderDto> createAccountHolder(@RequestBody CreateAccountHolderRequestDto request) {
         if (request.getFirstName() == null || request.getLastName() == null) throw new MissingParameterException("You are missing a parameter.");
