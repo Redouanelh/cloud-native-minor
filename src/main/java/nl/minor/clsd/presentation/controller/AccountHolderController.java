@@ -1,7 +1,7 @@
 package nl.minor.clsd.presentation.controller;
 
 import nl.minor.clsd.application.AccountHolderService;
-import nl.minor.clsd.application.error.AccountHolderNotFoundException;
+import nl.minor.clsd.application.error.NotFoundException;
 import nl.minor.clsd.application.error.MissingParameterException;
 import nl.minor.clsd.presentation.AccountHolderDto;
 import nl.minor.clsd.presentation.AccountHolderMapper;
@@ -28,7 +28,7 @@ public class AccountHolderController {
     @GetMapping("{id}")
     public ResponseEntity<AccountHolderDto> getAccountHolder(@PathVariable int id) {
         AccountHolderDto accountHolderDto = this.accountHolderMapper.entityToAccountHolderDto(this.accountHolderService.findById(id));
-        if (accountHolderDto == null) throw new AccountHolderNotFoundException("Accountholder with this id was not found.");
+        if (accountHolderDto == null) throw new NotFoundException("Accountholder with this id was not found.");
 
         return ResponseEntity.status(HttpStatus.OK).body(accountHolderDto);
     }
@@ -49,7 +49,7 @@ public class AccountHolderController {
 
     @DeleteMapping("{id}")
     public ResponseEntity<Boolean> deleteAccountHolder(@PathVariable int id) {
-        if (this.accountHolderService.findById(id) == null) throw new AccountHolderNotFoundException("Accountholder with this id was not found, no need to delete it.");
+        if (this.accountHolderService.findById(id) == null) throw new NotFoundException("Accountholder with this id was not found, no need to delete it.");
         return ResponseEntity.status(HttpStatus.OK).body(this.accountHolderService.deleteById(id));
     }
 

@@ -14,7 +14,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AccountDto {
-    private Iban iban;
+    private String iban;
     @NotNull
     @DecimalMin("1")
     private BigDecimal saldo;

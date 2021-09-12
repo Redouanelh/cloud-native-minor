@@ -17,12 +17,11 @@ import java.util.UUID;
 @AllArgsConstructor
 @Entity
 public class Account extends BaseEntity {
-    @Convert(converter = IbanToStringConverter.class)
     @Column(name = "iban")
-    private Iban iban;
+    private String iban;
 
     @Column(name = "saldo")
-    private BigDecimal saldo;
+    private BigDecimal saldo = new BigDecimal("0.0");
 
     @Enumerated(EnumType.STRING)
     private AccountStatus accountStatus = AccountStatus.ACTIVE;
@@ -34,15 +33,15 @@ public class Account extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "accountHolder_id"))
     private Set<AccountHolder> accountHolders;
 
-    public Set<AccountHolder> getAccountHolders() {
-        return Collections.unmodifiableSet(accountHolders);
+    public Account(String iban) {
+        this.iban = iban;
     }
 
     public boolean addAccountHolder(AccountHolder holder) {
         return accountHolders.add(holder);
     }
 
-    public boolean removeAccountHolder(UUID accountHolderId) {
+    public boolean removeAccountHolder(Integer accountHolderId) {
         return accountHolders.removeIf(holder -> holder.getId().equals(accountHolderId));
     }
 }
