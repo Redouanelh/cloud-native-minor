@@ -60,6 +60,11 @@ public class AccountService extends BaseService<Account> {
         }
     }
 
+    @Transactional
+    public Integer deleteByIban(String iban) {
+        return this.accountRepository.deleteByIban(iban);
+    }
+
     private String generateIban(CountryCode countryCode, String bankCode, long accountNr) {
         int accountNumberLength = BbanStructure.forCountry(countryCode).getEntries().stream()
                 .filter(e -> e.getEntryType().equals(account_number))

@@ -52,15 +52,15 @@ public class AccountController {
         AccountDto accountDto = this.accountMapper.entityToAccountDto(this.accountService.blockAccount(iban));
         return ResponseEntity.status(HttpStatus.OK).body(accountDto);
     }
+
+    // TODO: peroson aan rekening toevoegen of eruit halen
     // als user aan account toevoeg check van tevoren of die user er al nie in zit
 
-    // DELETE en doe met requestbody.ok 200 dus account/{id}
-    @DeleteMapping("{id}")
-    public ResponseEntity<Boolean> deleteAccount(@PathVariable int id) {
-        return null;
+    @DeleteMapping("{iban}")
+    public ResponseEntity<Integer> deleteAccount(@PathVariable String iban) {
+        AccountDto accountDto = this.accountMapper.entityToAccountDto(this.accountService.findByIban(iban));
+        if (accountDto == null) throw new NotFoundException(String.format("Account with iban %s was not found, no need to delete it.", iban));
+        return ResponseEntity.status(HttpStatus.OK).body(this.accountService.deleteByIban(iban));
     }
 
-    // Kunnen blokkeren van account
-
-    // Toevoegen van nog een rekeninghouder aan een account
 }
