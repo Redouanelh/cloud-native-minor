@@ -1,11 +1,15 @@
 package nl.minor.clsd.presentation.controller;
 
+import nl.minor.clsd.application.AccountHolderService;
 import nl.minor.clsd.application.AccountService;
 import nl.minor.clsd.application.error.NotFoundException;
 import nl.minor.clsd.application.error.MissingParameterException;
 import nl.minor.clsd.presentation.AccountDto;
+import nl.minor.clsd.presentation.AccountHolderDto;
+import nl.minor.clsd.presentation.AccountHolderMapper;
 import nl.minor.clsd.presentation.AccountMapper;
 import nl.minor.clsd.presentation.requests.CreateAccountRequestDto;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,10 +23,14 @@ public class AccountController {
 
     private final AccountService accountService;
     private final AccountMapper accountMapper;
+    private final AccountHolderService accountHolderService;
+    private final AccountHolderMapper accountHolderMapper;
 
-    public AccountController(AccountService accountService, AccountMapper accountMapper) {
+    public AccountController(AccountService accountService, AccountMapper accountMapper, AccountHolderService accountHolderService, AccountHolderMapper accountHolderMapper) {
         this.accountService = accountService;
         this.accountMapper = accountMapper;
+        this.accountHolderService = accountHolderService;
+        this.accountHolderMapper = accountHolderMapper;
     }
 
     @GetMapping("{iban}")
@@ -47,14 +55,20 @@ public class AccountController {
         return ResponseEntity.status(HttpStatus.CREATED).body(accountDto);
     }
 
-    @PutMapping("block/{iban}")
+    @PutMapping("{iban}/block}")
     public ResponseEntity<AccountDto> blockAccount(@PathVariable String iban) {
         AccountDto accountDto = this.accountMapper.entityToAccountDto(this.accountService.blockAccount(iban));
         return ResponseEntity.status(HttpStatus.OK).body(accountDto);
     }
 
-    // TODO: peroson aan rekening toevoegen of eruit halen
-    // als user aan account toevoeg check van tevoren of die user er al nie in zit
+    @PutMapping("{iban}/holder/{id}")
+    public ResponseEntity<AccountDto> addAccountHolder(@PathVariable String iban, @PathVariable int id) {
+        AccountDto accountDto = this.accountMapper.entityToAccountDto(this.accountService.addAccountHolder(iban, id));
+        return ResponseEntity.status(HttpStatus.OK).body(accountDto);
+    }
+
+    // Remove holder from account (ook check of ie er uberhuapt wel in zit)
+
 
     @DeleteMapping("{iban}")
     public ResponseEntity<Integer> deleteAccount(@PathVariable String iban) {

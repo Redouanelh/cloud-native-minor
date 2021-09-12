@@ -27,9 +27,7 @@ public class AccountHolderController {
 
     @GetMapping("{id}")
     public ResponseEntity<AccountHolderDto> getAccountHolder(@PathVariable int id) {
-        AccountHolderDto accountHolderDto = this.accountHolderMapper.entityToAccountHolderDto(this.accountHolderService.findById(id));
-        if (accountHolderDto == null) throw new NotFoundException("Accountholder with this id was not found.");
-
+        AccountHolderDto accountHolderDto = this.accountHolderMapper.entityToAccountHolderDto(this.accountHolderService.getById(id));
         return ResponseEntity.status(HttpStatus.OK).body(accountHolderDto);
     }
 
@@ -38,6 +36,8 @@ public class AccountHolderController {
         List<AccountHolderDto> accountHolders = this.accountHolderService.findAll().stream().map(this.accountHolderMapper::entityToAccountHolderDto).collect(Collectors.toList());
         return ResponseEntity.status(HttpStatus.OK).body(accountHolders);
     }
+
+    // TODO alle accounts kunnen ophalen van een accountholder
 
     @PostMapping
     public ResponseEntity<AccountHolderDto> createAccountHolder(@RequestBody CreateAccountHolderRequestDto request) {
