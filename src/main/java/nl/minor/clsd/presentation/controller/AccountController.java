@@ -23,14 +23,10 @@ public class AccountController {
 
     private final AccountService accountService;
     private final AccountMapper accountMapper;
-    private final AccountHolderService accountHolderService;
-    private final AccountHolderMapper accountHolderMapper;
 
-    public AccountController(AccountService accountService, AccountMapper accountMapper, AccountHolderService accountHolderService, AccountHolderMapper accountHolderMapper) {
+    public AccountController(AccountService accountService, AccountMapper accountMapper) {
         this.accountService = accountService;
         this.accountMapper = accountMapper;
-        this.accountHolderService = accountHolderService;
-        this.accountHolderMapper = accountHolderMapper;
     }
 
     @GetMapping("{iban}")
