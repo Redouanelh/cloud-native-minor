@@ -42,7 +42,7 @@ public class AccountService extends BaseService<Account> {
     public List<Account> findAllByHolder(int id) {
         AccountHolder accountHolder = this.accountHolderService.getById(id);
         return this.accountRepository.findAllByAccountHolders(accountHolder);
-    }
+}
 
     @Transactional
     public Account saveAccount(CountryCode countryCode, String bankCode, long accountNr) {
