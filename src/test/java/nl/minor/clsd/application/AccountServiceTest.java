@@ -40,7 +40,7 @@ public class AccountServiceTest {
         Mockito.when(this.mockAccountRepository.findByIban("NL45ABNA0123456789")).thenReturn(Optional.empty());
 
         Assertions.assertThrows(NotFoundException.class, () -> {
-            this.accountService.findByIban("NL45ABNA0123456789"); 
+            this.accountService.findByIban("NL45ABNA0123456789");
         });
 
         Mockito.verify(this.mockAccountRepository, Mockito.times(1)).findByIban("NL45ABNA0123456789");
