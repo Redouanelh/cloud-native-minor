@@ -46,9 +46,8 @@ public class AccountHolderController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Boolean> deleteAccountHolder(@PathVariable int id) {
-        if (this.accountHolderService.findById(id) == null) throw new NotFoundException("Accountholder with this id was not found, no need to delete it.");
-        return ResponseEntity.status(HttpStatus.OK).body(this.accountHolderService.deleteById(id));
+    public ResponseEntity<Integer> deleteAccountHolder(@PathVariable int id) {
+        return ResponseEntity.status(HttpStatus.OK).body(this.accountHolderService.deleteHolderById(id));
     }
 
 }
