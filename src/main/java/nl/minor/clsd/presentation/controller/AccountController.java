@@ -81,8 +81,7 @@ public class AccountController {
 
     @DeleteMapping("{iban}")
     public ResponseEntity<Integer> deleteAccount(@PathVariable String iban) {
-        AccountDto accountDto = this.accountMapper.entityToAccountDto(this.accountService.findByIban(iban));
-        if (accountDto == null) throw new NotFoundException(String.format("Account with iban %s was not found, no need to delete it.", iban));
+        this.accountService.findByIban(iban);
         return ResponseEntity.status(HttpStatus.OK).body(this.accountService.deleteByIban(iban));
     }
 
