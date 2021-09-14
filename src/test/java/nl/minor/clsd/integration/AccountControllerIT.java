@@ -1,5 +1,6 @@
 package nl.minor.clsd.integration;
 
+import nl.minor.clsd.application.error.NotFoundException;
 import nl.minor.clsd.presentation.AccountDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,5 +25,13 @@ public class AccountControllerIT {
         var response = this.testRestTemplate.getForObject(path, AccountDto.class);
         assertThat(response.getIban()).isEqualTo("NLABNA1234567890");
     }
+
+//    @Test
+//    void get_all_accounts() {
+//        var path = String.format("http://localhost:%s/api/account", this.port);
+//        var response = this.testRestTemplate.getForObject(path, AccountDto.class);
+//        assertThat(response.getAccountHolders().size()).isEqualTo(6);
+//    }
+
 
 }
