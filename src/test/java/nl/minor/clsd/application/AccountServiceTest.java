@@ -115,7 +115,7 @@ public class AccountServiceTest {
     @Test
     void save_account_failed() {
         Mockito.when(this.mockAccountRepository.findByIban("NL35ABNA0000000124")).thenReturn(Optional.empty()); // account does not exist yet
-        Mockito.when(this.mockAccountRepository.save(any())).thenReturn(new Account()); // empty account without data (for example id or iban)
+        Mockito.when(this.mockAccountRepository.save(any())).thenReturn(new Account()); // empty account without data (for example: id or iban)
 
         Assertions.assertThrows(FailedToSaveObjectException.class, () -> {
             this.accountService.saveAccount(CountryCode.NL, "ABNA", 124);
