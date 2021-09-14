@@ -1,5 +1,6 @@
 package nl.minor.clsd.integration;
 
+import nl.minor.clsd.presentation.AccountDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,7 +20,9 @@ public class AccountControllerIT {
 
     @Test
     void get_account() {
-
+        var path = String.format("http://localhost:%s/api/account/NLABNA1234567890", this.port);
+        var response = this.testRestTemplate.getForObject(path, AccountDto.class);
+        assertThat(response.getIban()).isEqualTo("NLABNA1234567890");
     }
 
 }
