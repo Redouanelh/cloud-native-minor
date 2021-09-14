@@ -5,13 +5,12 @@ import nl.minor.clsd.application.error.NotFoundException;
 import nl.minor.clsd.domain.entity.Account;
 import nl.minor.clsd.domain.entity.AccountHolder;
 import nl.minor.clsd.repository.AccountRepository;
+import org.iban4j.CountryCode;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
@@ -19,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
 public class AccountServiceTest {
@@ -31,14 +31,19 @@ public class AccountServiceTest {
     @InjectMocks
     AccountService accountService;
 
+    @Captor
+    ArgumentCaptor<Account> accountCaptor;
+
     Account account;
     Account secondAccount;
+    Account thirdAccount;
     AccountHolder accountHolder;
 
     @BeforeEach
     void beforeEach() {
         this.account = new Account("NL69INGB0123456789");
         this.secondAccount = new Account("NL69INGB2222222222");
+        this.thirdAccount = new Account("NL35ABNA0000000124");
         this.accountHolder = new AccountHolder("Redouan", "Kaasje");
     }
 
@@ -76,5 +81,21 @@ public class AccountServiceTest {
         assertThat(result.contains(this.account)).isTrue();
         assertThat(result.contains(this.secondAccount)).isTrue();
         Mockito.verify(this.mockAccountRepository, Mockito.times(1)).findAllByAccountHolders(this.accountHolder);
+    }
+
+    @Test
+    void save_account() {
+        this.thirdAccount.setId(1);
+
+        Mockito.when(this.mockAccountRepository.findByIban("NL35ABNA0000000124")).thenReturn(Optional.empty()); // account does not exist yet
+        Mockito.when(this.mockAccountRepository.save(any())).thenReturn(this.thirdAccount);
+
+        var result = this.accountService.saveAccount(CountryCode.NL, "ABNA", 124);
+
+        assertThat(result.getIban()).isEqualTo("NL35ABNA0000000124");
+
+        // Captor annotation voor het opvangen van complexe objecten die parameters gebruiken.
+        Mockito.verify(this.mockAccountRepository, Mockito.times(1)).save(this.accountCaptor.capture());
+        assertThat(this.accountCaptor.getValue().getIban()).isEqualTo("NL35ABNA0000000124");
     }
 }
