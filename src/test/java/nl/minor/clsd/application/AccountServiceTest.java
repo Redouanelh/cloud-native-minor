@@ -1,6 +1,8 @@
 package nl.minor.clsd.application;
 
 import nl.minor.clsd.application.AccountService;
+import nl.minor.clsd.application.error.AlreadyExistsException;
+import nl.minor.clsd.application.error.FailedToSaveObjectException;
 import nl.minor.clsd.application.error.NotFoundException;
 import nl.minor.clsd.domain.entity.Account;
 import nl.minor.clsd.domain.entity.AccountHolder;
@@ -97,5 +99,29 @@ public class AccountServiceTest {
         // Captor annotation voor het opvangen van complexe objecten die parameters gebruiken.
         Mockito.verify(this.mockAccountRepository, Mockito.times(1)).save(this.accountCaptor.capture());
         assertThat(this.accountCaptor.getValue().getIban()).isEqualTo("NL35ABNA0000000124");
+    }
+
+    @Test
+    void save_account_already_exists() {
+        Mockito.when(this.mockAccountRepository.findByIban("NL35ABNA0000000124")).thenReturn(java.util.Optional.ofNullable(this.account));
+
+        Assertions.assertThrows(AlreadyExistsException.class, () -> {
+            this.accountService.saveAccount(CountryCode.NL, "ABNA", 124);
+        });
+
+        Mockito.verify(this.mockAccountRepository, Mockito.times(1)).findByIban("NL35ABNA0000000124");
+    }
+
+    @Test
+    void save_account_failed() {
+        Mockito.when(this.mockAccountRepository.findByIban("NL35ABNA0000000124")).thenReturn(Optional.empty()); // account does not exist yet
+        Mockito.when(this.mockAccountRepository.save(any())).thenReturn(new Account()); // empty account without data (for example id or iban)
+
+        Assertions.assertThrows(FailedToSaveObjectException.class, () -> {
+            this.accountService.saveAccount(CountryCode.NL, "ABNA", 124);
+        });
+
+        Mockito.verify(this.mockAccountRepository, Mockito.times(1)).findByIban("NL35ABNA0000000124");
+        Mockito.verify(this.mockAccountRepository, Mockito.times(1)).save(this.accountCaptor.capture());
     }
 }
