@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.*;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
@@ -28,6 +29,20 @@ public class AccountControllerIT {
         var response = this.testRestTemplate.getForObject(path, AccountDto.class);
 
         assertThat(response.getIban()).isEqualTo("NL39ABNA1234567890");
+    }
+
+    @Test
+    void account_not_found() {
+        var path = String.format("http://localhost:%s/api/account/NL39ABNA9191919191", this.port);
+
+        HttpHeaders headers = new HttpHeaders();
+
+        headers.set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
+        HttpEntity<?> entity = new HttpEntity<>(headers);
+
+        var response = this.testRestTemplate.exchange(path, HttpMethod.GET, entity, NotFoundException.class);
+        assertThat(response.getStatusCode()).isEqualByComparingTo(HttpStatus.NOT_FOUND);
+        assertThat(response.getBody().getMessage()).contains("not found");
     }
 
     @Test
@@ -54,11 +69,6 @@ public class AccountControllerIT {
         var getPath = String.format("http://localhost:%s/api/account/NL39ABNA0000000246", this.port);
         var response = this.testRestTemplate.getForObject(getPath, AccountDto.class);
         assertThat(response.getIban()).isEqualTo("NL39ABNA0000000246");
-    }
-
-    @Test
-    void delete_account() {
-
     }
 
 }
