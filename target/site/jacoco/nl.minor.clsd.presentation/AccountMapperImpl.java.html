@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AccountMapperImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">clsd</a> &gt; <a href="index.source.html" class="el_package">nl.minor.clsd.presentation</a> &gt; <span class="el_source">AccountMapperImpl.java</span></div><h1>AccountMapperImpl.java</h1><pre class="source lang-java linenums">package nl.minor.clsd.presentation;
+
+import java.util.HashSet;
+import java.util.Set;
+import javax.annotation.processing.Generated;
+import nl.minor.clsd.domain.entity.Account;
+import nl.minor.clsd.domain.entity.AccountHolder;
+import org.springframework.stereotype.Component;
+
+@Generated(
+    value = &quot;org.mapstruct.ap.MappingProcessor&quot;,
+    date = &quot;2021-09-13T22:25:54+0200&quot;,
+    comments = &quot;version: 1.4.2.Final, compiler: javac, environment: Java 11.0.4 (JetBrains s.r.o)&quot;
+)
+@Component
+<span class="fc" id="L16">public class AccountMapperImpl implements AccountMapper {</span>
+
+    @Override
+    public AccountDto entityToAccountDto(Account entity) {
+<span class="nc bnc" id="L20" title="All 2 branches missed.">        if ( entity == null ) {</span>
+<span class="nc" id="L21">            return null;</span>
+        }
+
+<span class="nc" id="L24">        AccountDto accountDto = new AccountDto();</span>
+
+<span class="nc" id="L26">        accountDto.setIban( entity.getIban() );</span>
+<span class="nc" id="L27">        accountDto.setSaldo( entity.getSaldo() );</span>
+<span class="nc" id="L28">        accountDto.setAccountStatus( entity.getAccountStatus() );</span>
+<span class="nc" id="L29">        Set&lt;AccountHolder&gt; set = entity.getAccountHolders();</span>
+<span class="nc bnc" id="L30" title="All 2 branches missed.">        if ( set != null ) {</span>
+<span class="nc" id="L31">            accountDto.setAccountHolders( new HashSet&lt;AccountHolder&gt;( set ) );</span>
+        }
+
+<span class="nc" id="L34">        return accountDto;</span>
+    }
+
+    @Override
+    public Account accountDtoToEntity(AccountDto dto) {
+<span class="nc bnc" id="L39" title="All 2 branches missed.">        if ( dto == null ) {</span>
+<span class="nc" id="L40">            return null;</span>
+        }
+
+<span class="nc" id="L43">        Account account = new Account();</span>
+
+<span class="nc" id="L45">        account.setIban( dto.getIban() );</span>
+<span class="nc" id="L46">        account.setSaldo( dto.getSaldo() );</span>
+<span class="nc" id="L47">        account.setAccountStatus( dto.getAccountStatus() );</span>
+<span class="nc" id="L48">        Set&lt;AccountHolder&gt; set = dto.getAccountHolders();</span>
+<span class="nc bnc" id="L49" title="All 2 branches missed.">        if ( set != null ) {</span>
+<span class="nc" id="L50">            account.setAccountHolders( new HashSet&lt;AccountHolder&gt;( set ) );</span>
+        }
+
+<span class="nc" id="L53">        return account;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

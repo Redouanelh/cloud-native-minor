@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AccountService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">clsd</a> &gt; <a href="index.source.html" class="el_package">nl.minor.clsd.application</a> &gt; <span class="el_source">AccountService.java</span></div><h1>AccountService.java</h1><pre class="source lang-java linenums">package nl.minor.clsd.application;
+
+import nl.minor.clsd.application.error.AccountAlreadyBlockedException;
+import nl.minor.clsd.application.error.AlreadyExistsException;
+import nl.minor.clsd.application.error.FailedToSaveObjectException;
+import nl.minor.clsd.application.error.NotFoundException;
+import nl.minor.clsd.domain.AccountStatus;
+import nl.minor.clsd.domain.entity.Account;
+import nl.minor.clsd.domain.entity.AccountHolder;
+import nl.minor.clsd.repository.AccountRepository;
+import org.iban4j.CountryCode;
+import org.iban4j.Iban;
+import org.iban4j.bban.BbanStructure;
+import org.iban4j.bban.BbanStructureEntry;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+
+import static org.iban4j.bban.BbanEntryType.account_number;
+
+@Service
+public class AccountService extends BaseService&lt;Account&gt; {
+
+    private AccountRepository accountRepository;
+    private AccountHolderService accountHolderService;
+
+    public AccountService(AccountRepository accountRepository, AccountHolderService accountHolderService) {
+<span class="fc" id="L30">        super(accountRepository);</span>
+<span class="fc" id="L31">        this.accountRepository = accountRepository;</span>
+<span class="fc" id="L32">        this.accountHolderService = accountHolderService;</span>
+<span class="fc" id="L33">    }</span>
+
+    public Account findByIban(String iban) {
+<span class="fc" id="L36">        Optional&lt;Account&gt; account = this.accountRepository.findByIban(iban);</span>
+<span class="fc bfc" id="L37" title="All 2 branches covered.">        if (account.isEmpty()) throw new NotFoundException(String.format(&quot;Account with iban %s was not found.&quot;, iban));</span>
+
+<span class="fc" id="L39">        else return account.get();</span>
+    }
+
+    public List&lt;Account&gt; findAllByHolder(int id) {
+<span class="fc" id="L43">        AccountHolder accountHolder = this.accountHolderService.getById(id);</span>
+<span class="fc" id="L44">        return this.accountRepository.findAllByAccountHolders(accountHolder);</span>
+}
+
+    @Transactional
+    public Account saveAccount(CountryCode countryCode, String bankCode, long accountNr) {
+<span class="fc" id="L49">        String iban = this.generateIban(countryCode, bankCode, accountNr);</span>
+<span class="fc bfc" id="L50" title="All 2 branches covered.">        if (this.accountRepository.findByIban(iban).isPresent()) throw new AlreadyExistsException(String.format(&quot;Account with iban %s already exists&quot;, iban));</span>
+
+<span class="fc" id="L52">        Account savedAccount = this.accountRepository.save(new Account(iban));</span>
+<span class="fc bfc" id="L53" title="All 2 branches covered.">        if (savedAccount.getId() == null) throw new FailedToSaveObjectException(&quot;Failed to save Account.&quot;);</span>
+
+<span class="fc" id="L55">        return savedAccount;</span>
+    }
+
+    @Transactional
+    public Account addAccountHolder(String iban, int id) {
+<span class="nc" id="L60">        Optional&lt;Account&gt; account = this.accountRepository.findByIban(iban);</span>
+<span class="nc bnc" id="L61" title="All 2 branches missed.">        if (account.isEmpty()) throw new NotFoundException(String.format(&quot;Account with iban %s was not found.&quot;, iban));</span>
+
+<span class="nc" id="L63">        AccountHolder accountHolder = this.accountHolderService.getById(id);</span>
+<span class="nc bnc" id="L64" title="All 2 branches missed.">        if (account.get().getAccountHolders().contains(accountHolder)) throw new AlreadyExistsException(String.format(&quot;Account with iban %s already has AccountHolder with id %s&quot;, iban, id));</span>
+        else {
+<span class="nc" id="L66">            account.get().addAccountHolder(accountHolder);</span>
+<span class="nc" id="L67">            return account.get();</span>
+        }
+    }
+
+    @Transactional
+    public Account removeAccountHolder(String iban, int id) {
+<span class="nc" id="L73">        Optional&lt;Account&gt; account = this.accountRepository.findByIban(iban);</span>
+<span class="nc bnc" id="L74" title="All 2 branches missed.">        if (account.isEmpty()) throw new NotFoundException(String.format(&quot;Account with iban %s was not found.&quot;, iban));</span>
+
+<span class="nc" id="L76">        AccountHolder accountHolder = this.accountHolderService.getById(id);</span>
+<span class="nc bnc" id="L77" title="All 2 branches missed.">        if (!account.get().getAccountHolders().contains(accountHolder)) throw new AlreadyExistsException(String.format(&quot;Account with iban %s does not contain an AccountHolder with id %s. No need to remove it.&quot;, iban, id));</span>
+        else {
+<span class="nc" id="L79">            account.get().removeAccountHolder(accountHolder.getId());</span>
+<span class="nc" id="L80">            return account.get();</span>
+        }
+    }
+
+    @Transactional
+    public Account blockAccount(String iban) {
+<span class="nc" id="L86">        Optional&lt;Account&gt; account = this.accountRepository.findByIban(iban);</span>
+
+<span class="nc bnc" id="L88" title="All 2 branches missed.">        if (account.isEmpty()) throw new NotFoundException(String.format(&quot;Account with iban %s was not found.&quot;, iban));</span>
+<span class="nc bnc" id="L89" title="All 2 branches missed.">        if (account.get().getAccountStatus().equals(AccountStatus.BLOCKED)) throw new AccountAlreadyBlockedException(String.format(&quot;Account with iban %s was already blocked.&quot;, iban));</span>
+        else {
+<span class="nc" id="L91">            account.get().setAccountStatus(AccountStatus.BLOCKED);</span>
+<span class="nc" id="L92">            return account.get();</span>
+        }
+    }
+
+    @Transactional
+    public Integer deleteByIban(String iban) {
+<span class="nc" id="L98">        return this.accountRepository.deleteByIban(iban);</span>
+    }
+
+    private String generateIban(CountryCode countryCode, String bankCode, long accountNr) {
+<span class="fc" id="L102">        int accountNumberLength = BbanStructure.forCountry(countryCode).getEntries().stream()</span>
+<span class="fc" id="L103">                .filter(e -&gt; e.getEntryType().equals(account_number))</span>
+<span class="fc" id="L104">                .findFirst()</span>
+<span class="fc" id="L105">                .map(BbanStructureEntry::getLength)</span>
+<span class="fc" id="L106">                .orElse(0);</span>
+<span class="fc" id="L107">        String formatParam = &quot;%0&quot; + accountNumberLength + &quot;d&quot;;</span>
+<span class="fc" id="L108">        String accountNumber = String.format(formatParam, accountNr);</span>
+<span class="fc" id="L109">        return new Iban.Builder()</span>
+<span class="fc" id="L110">                .countryCode(countryCode)</span>
+<span class="fc" id="L111">                .bankCode(bankCode)</span>
+<span class="fc" id="L112">                .accountNumber(accountNumber)</span>
+<span class="fc" id="L113">                .buildRandom()</span>
+<span class="fc" id="L114">                .toString();</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

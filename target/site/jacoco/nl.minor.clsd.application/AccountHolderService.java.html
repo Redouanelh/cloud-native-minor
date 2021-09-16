@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AccountHolderService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">clsd</a> &gt; <a href="index.source.html" class="el_package">nl.minor.clsd.application</a> &gt; <span class="el_source">AccountHolderService.java</span></div><h1>AccountHolderService.java</h1><pre class="source lang-java linenums">package nl.minor.clsd.application;
+
+import nl.minor.clsd.application.error.AccountHolderHasAccountException;
+import nl.minor.clsd.application.error.FailedToSaveObjectException;
+import nl.minor.clsd.application.error.NotFoundException;
+import nl.minor.clsd.domain.entity.Account;
+import nl.minor.clsd.domain.entity.AccountHolder;
+import nl.minor.clsd.repository.AccountHolderRepository;
+import nl.minor.clsd.repository.AccountRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class AccountHolderService extends BaseService&lt;AccountHolder&gt; {
+
+    private AccountHolderRepository accountHolderRepository;
+    private AccountRepository accountRepository;
+
+    public AccountHolderService(AccountHolderRepository accountHolderRepository, AccountRepository accountRepository) {
+<span class="fc" id="L23">        super(accountHolderRepository);</span>
+<span class="fc" id="L24">        this.accountHolderRepository = accountHolderRepository;</span>
+<span class="fc" id="L25">        this.accountRepository = accountRepository;</span>
+<span class="fc" id="L26">    }</span>
+
+    public AccountHolder getById(int id) {
+<span class="nc" id="L29">        Optional&lt;AccountHolder&gt; accountHolder = this.accountHolderRepository.findById(id);</span>
+
+<span class="nc bnc" id="L31" title="All 2 branches missed.">        if (accountHolder.isEmpty()) throw new NotFoundException(String.format(&quot;AccountHolder with id %s was not found.&quot;, id));</span>
+<span class="nc" id="L32">        else return accountHolder.get();</span>
+    }
+
+    @Transactional
+    public AccountHolder saveAccountHolder(String firstname, String lastname) {
+<span class="nc" id="L37">        AccountHolder savedAccountHolder = this.accountHolderRepository.save(new AccountHolder(firstname, lastname));</span>
+
+<span class="nc bnc" id="L39" title="All 2 branches missed.">        if (savedAccountHolder.getId() == null) throw new FailedToSaveObjectException(&quot;Failed to save Account Holder.&quot;);</span>
+<span class="nc" id="L40">        return savedAccountHolder;</span>
+    }
+
+    @Transactional
+    public Integer deleteHolderById(int id) {
+<span class="nc" id="L45">        Optional&lt;AccountHolder&gt; accountHolder = this.accountHolderRepository.findById(id);</span>
+<span class="nc bnc" id="L46" title="All 2 branches missed.">        if (accountHolder.isEmpty()) throw new NotFoundException(String.format(&quot;AccountHolder with id %s was not found, no need to delete it.&quot;, id));</span>
+
+<span class="nc" id="L48">        List&lt;Account&gt; accounts = this.accountRepository.findAllByAccountHolders(accountHolder.get());</span>
+<span class="nc bnc" id="L49" title="All 2 branches missed.">        if (accounts.size() &gt; 0) throw new AccountHolderHasAccountException(String.format(&quot;AccountHolder with id %s is connected to one/multiple accounts. First remove the AccountHolder from those account(s).&quot;, id));</span>
+
+<span class="nc" id="L51">        return this.accountHolderRepository.deleteById(id);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>

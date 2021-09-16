@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AccountHolderController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">clsd</a> &gt; <a href="index.source.html" class="el_package">nl.minor.clsd.presentation.controller</a> &gt; <span class="el_source">AccountHolderController.java</span></div><h1>AccountHolderController.java</h1><pre class="source lang-java linenums">package nl.minor.clsd.presentation.controller;
+
+import nl.minor.clsd.application.AccountHolderService;
+import nl.minor.clsd.application.error.NotFoundException;
+import nl.minor.clsd.application.error.MissingParameterException;
+import nl.minor.clsd.presentation.AccountHolderDto;
+import nl.minor.clsd.presentation.AccountHolderMapper;
+import nl.minor.clsd.presentation.requests.CreateAccountHolderRequestDto;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@RestController
+@RequestMapping(&quot;accountholder&quot;)
+public class AccountHolderController {
+
+    private final AccountHolderService accountHolderService;
+    private final AccountHolderMapper accountHolderMapper;
+
+<span class="fc" id="L23">    public AccountHolderController(AccountHolderService accountHolderService, AccountHolderMapper accountHolderMapper) {</span>
+<span class="fc" id="L24">        this.accountHolderService = accountHolderService;</span>
+<span class="fc" id="L25">        this.accountHolderMapper = accountHolderMapper;</span>
+<span class="fc" id="L26">    }</span>
+
+    @GetMapping(&quot;{id}&quot;)
+    public ResponseEntity&lt;AccountHolderDto&gt; getAccountHolder(@PathVariable int id) {
+<span class="nc" id="L30">        AccountHolderDto accountHolderDto = this.accountHolderMapper.entityToAccountHolderDto(this.accountHolderService.getById(id));</span>
+<span class="nc" id="L31">        return ResponseEntity.status(HttpStatus.OK).body(accountHolderDto);</span>
+    }
+
+    @GetMapping
+    public ResponseEntity&lt;List&lt;AccountHolderDto&gt;&gt; getAll() {
+<span class="nc" id="L36">        List&lt;AccountHolderDto&gt; accountHolders = this.accountHolderService.findAll().stream().map(this.accountHolderMapper::entityToAccountHolderDto).collect(Collectors.toList());</span>
+<span class="nc" id="L37">        return ResponseEntity.status(HttpStatus.OK).body(accountHolders);</span>
+    }
+
+    @PostMapping
+    public ResponseEntity&lt;AccountHolderDto&gt; createAccountHolder(@RequestBody CreateAccountHolderRequestDto request) {
+<span class="nc bnc" id="L42" title="All 4 branches missed.">        if (request.getFirstName() == null || request.getLastName() == null) throw new MissingParameterException(&quot;You are missing a parameter.&quot;);</span>
+
+<span class="nc" id="L44">        AccountHolderDto accountHolderDto = this.accountHolderMapper.entityToAccountHolderDto(this.accountHolderService.saveAccountHolder(request.getFirstName(), request.getLastName()));</span>
+<span class="nc" id="L45">        return ResponseEntity.status(HttpStatus.CREATED).body(accountHolderDto);</span>
+    }
+
+    @DeleteMapping(&quot;{id}&quot;)
+    public ResponseEntity&lt;Integer&gt; deleteAccountHolder(@PathVariable int id) {
+<span class="nc" id="L50">        return ResponseEntity.status(HttpStatus.OK).body(this.accountHolderService.deleteHolderById(id));</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.6.202009150832</span></div></body></html>
