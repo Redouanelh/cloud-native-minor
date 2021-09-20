@@ -104,7 +104,13 @@
 			<artifactId>mockserver-client-java</artifactId>
 			<version>5.11.2</version>
 		</dependency>
-
+		<!-- https://mvnrepository.com/artifact/org.mock-server/mockserver-netty -->
+		<dependency>
+			<groupId>org.mock-server</groupId>
+			<artifactId>mockserver-netty</artifactId>
+			<version>5.11.2</version>
+			<scope>test</scope>
+		</dependency>
 
 
 	</dependencies>
