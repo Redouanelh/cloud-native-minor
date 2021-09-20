@@ -87,7 +87,7 @@ public class DummyApiServiceIT {
     public void mock_get_accountholders() {
         this.createDummyApiMock();
 
-        String response = this.testRestTemplate.getForObject(("http://localhost:" + this.port + "/api/accountholder"), String.class);
+        String response = this.testRestTemplate.getForObject(("http://localhost:" + this.port + "/dummy"), String.class);
 
         assertThat(response).contains("firstName");
     }

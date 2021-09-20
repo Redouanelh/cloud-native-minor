@@ -7,12 +7,14 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class DummyApiService {
 
-//    @Autowired
-//    private final RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
-//    public DummyApiService(RestTemplate restTemplate) {
-////        this.restTemplate = restTemplate;
-////    }
+    public DummyApiService(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 
+    public String getEmployees() {
+        return this.restTemplate.getForObject("http://dummy.restapiexample.com/api/v1/employees", String.class);
+    }
 
 }
