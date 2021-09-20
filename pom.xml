@@ -99,6 +99,12 @@
 			<version>1.1.10</version>
 			<type>pom</type>
 		</dependency>
+		<dependency>
+			<groupId>org.mock-server</groupId>
+			<artifactId>mockserver-client-java</artifactId>
+			<version>5.11.2</version>
+		</dependency>
+
 
 
 	</dependencies>
