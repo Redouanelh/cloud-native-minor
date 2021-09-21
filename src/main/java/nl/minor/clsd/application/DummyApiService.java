@@ -1,6 +1,6 @@
 package nl.minor.clsd.application;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -9,12 +9,14 @@ public class DummyApiService {
 
     private final RestTemplate restTemplate;
 
+    @Value("${dummy.service}")
+    private String host;
+
     public DummyApiService(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
     }
 
     public String getEmployees() {
-        return this.restTemplate.getForObject("http://dummy.restapiexample.com/api/v1/employees", String.class);
+        return restTemplate.getForObject("http://" + host + "/api/v1/employees", String.class);
     }
-
 }
