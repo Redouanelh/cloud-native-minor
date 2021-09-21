@@ -1,0 +1,9 @@
+-------------------------------------------------------------------------------
+Test set: nl.minor.clsd.ClsdApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 11.64 s <<< FAILURE! - in nl.minor.clsd.ClsdApplicationTests
+contextLoads  Time elapsed: 0.001 s  <<< ERROR!
+java.lang.IllegalStateException: Failed to load ApplicationContext
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'dummyApiService': Injection of autowired dependencies failed; nested exception is java.lang.IllegalArgumentException: Could not resolve placeholder 'dummyhost' in value "${dummyhost}"
+Caused by: java.lang.IllegalArgumentException: Could not resolve placeholder 'dummyhost' in value "${dummyhost}"
+
